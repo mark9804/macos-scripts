@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AMApplicationBuild</key>
-	<string>525</string>
+	<string>531</string>
 	<key>AMApplicationVersion</key>
 	<string>2.10</string>
 	<key>AMDocumentVersion</key>
@@ -136,7 +136,7 @@
 					<key>COMMAND_STRING</key>
 					<string>for f in "$@"
 do
-	/opt/homebrew/bin/cwebp "$f" -o "${f%.*}.webp"
+	/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af "$f" -o "${f%.*}.webp"
 done</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -262,7 +262,7 @@ done</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>BE4F5893-C6B0-40C9-B2AC-7EB83CD9B155</key>
+		<key>3226BD68-13C2-4F0B-B726-A3B99D6F1D00</key>
 		<dict>
 			<key>from</key>
 			<string>3EB61CFB-5F49-4804-A90A-37943DB46288 - 3EB61CFB-5F49-4804-A90A-37943DB46288</string>
