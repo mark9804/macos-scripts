@@ -136,7 +136,14 @@
 					<key>COMMAND_STRING</key>
 					<string>for f in "$@"
 do
-	/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af "$f" -o "${f%.*}.webp"
+	width=$(sips -g pixelWidth "$f" | tail -n1 | awk '{print $2}')
+	height=$(sips -g pixelHeight "$f" | tail -n1 | awk '{print $2}')
+
+	if [ "$width" -ge "$height" ]; then
+		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 4096 0 "$f" -o "${f%.*}.webp"
+	else
+		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 0 4096 "$f" -o "${f%.*}.webp"
+	fi
 done</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -262,7 +269,7 @@ done</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>3226BD68-13C2-4F0B-B726-A3B99D6F1D00</key>
+		<key>2CB60358-15F2-4FF2-9AC6-0F016D38F37F</key>
 		<dict>
 			<key>from</key>
 			<string>3EB61CFB-5F49-4804-A90A-37943DB46288 - 3EB61CFB-5F49-4804-A90A-37943DB46288</string>
