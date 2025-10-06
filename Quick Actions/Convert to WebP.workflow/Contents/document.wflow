@@ -21,81 +21,6 @@
 					<true/>
 					<key>Types</key>
 					<array>
-						<string>com.apple.cocoa.path</string>
-					</array>
-				</dict>
-				<key>AMActionVersion</key>
-				<string>2.1.1</string>
-				<key>AMApplication</key>
-				<array>
-					<string>Finder</string>
-				</array>
-				<key>AMParameterProperties</key>
-				<dict/>
-				<key>AMProvides</key>
-				<dict>
-					<key>Container</key>
-					<string>List</string>
-					<key>Types</key>
-					<array>
-						<string>com.apple.cocoa.path</string>
-					</array>
-				</dict>
-				<key>AMRequiredResources</key>
-				<array/>
-				<key>ActionBundlePath</key>
-				<string>/System/Library/Automator/Get Selected Finder Items 2.action</string>
-				<key>ActionName</key>
-				<string>Get Selected Finder Items</string>
-				<key>ActionParameters</key>
-				<dict/>
-				<key>BundleIdentifier</key>
-				<string>com.apple.Automator.GetSelectedFinderItems2</string>
-				<key>CFBundleVersion</key>
-				<string>2.1.1</string>
-				<key>CanShowSelectedItemsWhenRun</key>
-				<false/>
-				<key>CanShowWhenRun</key>
-				<true/>
-				<key>Category</key>
-				<array>
-					<string>AMCategoryFilesAndFolders</string>
-				</array>
-				<key>Class Name</key>
-				<string>AMGetSelectedFinderItemsAction</string>
-				<key>InputUUID</key>
-				<string>8E9D3FF2-E24A-4467-A4FF-04CCCF154F2C</string>
-				<key>Keywords</key>
-				<array/>
-				<key>OutputUUID</key>
-				<string>9E71B57A-89FE-495A-8E41-B0CBCB9EA9AD</string>
-				<key>UUID</key>
-				<string>3EB61CFB-5F49-4804-A90A-37943DB46288</string>
-				<key>UnlocalizedApplications</key>
-				<array>
-					<string>Finder</string>
-				</array>
-				<key>arguments</key>
-				<dict/>
-				<key>isViewVisible</key>
-				<integer>1</integer>
-				<key>location</key>
-				<string>207.000000:68.000000</string>
-			</dict>
-			<key>isViewVisible</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>action</key>
-			<dict>
-				<key>AMAccepts</key>
-				<dict>
-					<key>Container</key>
-					<string>List</string>
-					<key>Optional</key>
-					<true/>
-					<key>Types</key>
-					<array>
 						<string>com.apple.cocoa.string</string>
 					</array>
 				</dict>
@@ -139,10 +64,14 @@ do
 	width=$(sips -g pixelWidth "$f" | tail -n1 | awk '{print $2}')
 	height=$(sips -g pixelHeight "$f" | tail -n1 | awk '{print $2}')
 
-	if [ "$width" -ge "$height" ]; then
-		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 4096 0 "$f" -o "${f%.*}.webp"
+	if [ "$width" -le 4096 ] &amp;&amp; [ "$height" -le 4096 ]; then
+		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af "$f" -o "${f%.*}.webp"
 	else
-		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 0 4096 "$f" -o "${f%.*}.webp"
+		if [ "$width" -ge "$height" ]; then
+			/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 4096 0 "$f" -o "${f%.*}.webp"
+		else
+			/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 0 4096 "$f" -o "${f%.*}.webp"
+		fi
 	fi
 done</string>
 					<key>CheckedForUserDefaultShell</key>
@@ -259,7 +188,7 @@ done</string>
 				<key>isViewVisible</key>
 				<integer>1</integer>
 				<key>location</key>
-				<string>309.000000:370.000000</string>
+				<string>309.000000:305.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -268,15 +197,7 @@ done</string>
 		</dict>
 	</array>
 	<key>connectors</key>
-	<dict>
-		<key>2CB60358-15F2-4FF2-9AC6-0F016D38F37F</key>
-		<dict>
-			<key>from</key>
-			<string>3EB61CFB-5F49-4804-A90A-37943DB46288 - 3EB61CFB-5F49-4804-A90A-37943DB46288</string>
-			<key>to</key>
-			<string>A22C3AB4-5982-431F-8F65-08CE71ECEC2E - A22C3AB4-5982-431F-8F65-08CE71ECEC2E</string>
-		</dict>
-	</dict>
+	<dict/>
 	<key>workflowMetaData</key>
 	<dict>
 		<key>applicationBundleID</key>
