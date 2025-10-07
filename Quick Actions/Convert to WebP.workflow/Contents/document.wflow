@@ -59,21 +59,49 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>for f in "$@"
-do
+					<string>#!/bin/zsh
+
+# 1. 将核心处理逻辑封装成一个函数
+process_image() {
+	# $1 代表传入的文件路径
+	f="$1"
+	
+	# 获取图片原始尺寸
 	width=$(sips -g pixelWidth "$f" | tail -n1 | awk '{print $2}')
 	height=$(sips -g pixelHeight "$f" | tail -n1 | awk '{print $2}')
 
+	# 判断是否需要缩放
 	if [ "$width" -le 4096 ] &amp;&amp; [ "$height" -le 4096 ]; then
+		# 如果不需要缩放，直接转换
 		/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af "$f" -o "${f%.*}.webp"
 	else
+		# 如果需要缩放，判断以哪条边为基准
 		if [ "$width" -ge "$height" ]; then
 			/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 4096 0 "$f" -o "${f%.*}.webp"
 		else
 			/opt/homebrew/bin/cwebp -q 80 -mt -noalpha -af -resize 0 4096 "$f" -o "${f%.*}.webp"
 		fi
 	fi
-done</string>
+}
+
+# 2. 获取 CPU 核心数，作为最大并行任务数
+MAX_PROCS=$(sysctl -n hw.ncpu)
+
+# 3. 遍历所有输入的文件
+for f in "$@"; do
+  # 将函数调用放入后台执行 (&amp;)
+  process_image "$f" &amp;
+  
+  # 如果当前后台运行的任务数量达到上限，就暂停并等待任一任务完成
+  if [[ $(jobs -r -p | wc -l) -ge $MAX_PROCS ]]; then
+    wait -n
+  fi
+done
+
+# 4. 等待所有剩余的后台任务全部执行完毕
+wait
+
+# 脚本执行完毕</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -188,7 +216,7 @@ done</string>
 				<key>isViewVisible</key>
 				<integer>1</integer>
 				<key>location</key>
-				<string>309.000000:305.000000</string>
+				<string>309.000000:632.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
